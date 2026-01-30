@@ -23,6 +23,9 @@ yarn dev
 
 # build de produção
 yarn build
+
+# executar testes
+yarn test
 ```
 
 ## Estrutura de pastas
