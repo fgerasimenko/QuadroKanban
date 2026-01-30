@@ -1,3 +1,5 @@
+import { TaskStatus } from "@/types/taskTypes";
+
 export function includesText(searchedText: string, textToSearch: string) {
   return searchedText.toLowerCase().includes(textToSearch.toLowerCase());
 }

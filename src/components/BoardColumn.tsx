@@ -15,7 +15,7 @@ export function BoardColumn({ title, status, tasks, onCardClick, onCardMove }: P
     <div className="col">
       <div className="col-header">
         <h3>{title}</h3>
-        <span>{tasks.length}</span>
+        <span className="col-task-count">{tasks.length}</span>
       </div>
 
       <Droppable droppableId={status}>

@@ -175,11 +175,11 @@ export function TaskFormModal({ mode, task, onClose }: Props) {
             <ActionButton
               title={task.archived ? "Desarquivar" : "Arquivar"}
               icon={task.archived ? "fa-box-open" : "fa-box-archive"}
-              variant="outline"
+              variant="secondary"
               onAction={handleArchive}
             />
           ) : null}
-          <ActionButton title="Cancelar" variant="ghost" onAction={onClose} />
+          <ActionButton title="Cancelar" variant="danger" onAction={onClose} />
           <ActionButton
             title={isEdit ? "Salvar" : "Criar"}
             icon={isEdit ? "fa-floppy-disk" : "fa-plus"}
