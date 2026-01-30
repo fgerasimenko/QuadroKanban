@@ -1,5 +1,5 @@
 {
-  "include": ["./**/*.ts", "./**/*.tsx"],
+  "include": ["./**/*.ts", "./**/*.tsx", "../tests/boardMutation.test.ts"],
   "exclude": ["node_modules", "build", "dist"],
   "compilerOptions": {
     "module": "ESNext",

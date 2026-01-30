@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "tests/boardMutation.test.ts"],
   "exclude": ["node_modules", "build", "dist"],
   "compilerOptions": {
     "module": "ESNext",

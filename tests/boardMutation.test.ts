@@ -4,8 +4,9 @@ import { moveCardToStatus } from "@/domain/boardMutation";
 
 describe("moveCardToStatus", () => {
   it("moves a task to another status and updates its order", () => {
-    const base: Omit<Task, "id" | "order" | "status" | "assignedTo"> = {
+    const baseTask: Omit<Task, "id" | "order" | "status" | "assignedTo"> = {
       title: "T",
+      isExternal: false,
       shortDescription: "",
       longDescription: "L",
       priority: "LOW",
@@ -17,21 +18,21 @@ describe("moveCardToStatus", () => {
 
     const tasks: Task[] = [
       {
-        ...base,
+        ...baseTask,
         id: "t1",
         order: 0,
         status: "TODO",
         assignedTo: { id: "user-1", name: "User" },
       },
       {
-        ...base,
+        ...baseTask,
         id: "t2",
         order: 0,
         status: "DOING",
         assignedTo: { id: "user-1", name: "User" },
       },
       {
-        ...base,
+        ...baseTask,
         id: "t3",
         order: 1,
         status: "DOING",
