@@ -22,6 +22,8 @@ export function TaskCard({ task, onClick, onMove }: Props) {
                 <div><strong>Data:</strong> {dateToString(task.createdAt)}</div>
                 <div><strong>Data Final:</strong> {dateToString(task.deadline)}</div>
                 <div><strong>Prioridade:</strong> {priorityLabel(task.priority)}</div>
+                <div><strong>Local:</strong> {task.location}</div>
+                <div>{task.shortDescription}</div>
             </div>
 
             {onMove && (

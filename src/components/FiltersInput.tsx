@@ -16,7 +16,7 @@ export function FiltersInput({filters, onChange}: Props) {
                 <label>Busca</label>
                 <input 
                     value={filters.query}
-                    placeholder="Buscar por nome, descrição"
+                    placeholder="Buscar por nome, descrição, localidade"
                     onChange={(e) => onChange({ query: e.target.value })}
                 >
                 </input>
@@ -24,8 +24,8 @@ export function FiltersInput({filters, onChange}: Props) {
             <div className="field">
                 <label>Prioridade</label>
                 <select
-                value={filters.priority}
-                onChange={(e) => onChange({ priority: e.target.value as any })}
+                    value={filters.priority}
+                    onChange={(e) => onChange({ priority: e.target.value as any })}
                 >
                 {priorities.map((p) => (
                     <option key={p} value={p}>
@@ -37,8 +37,8 @@ export function FiltersInput({filters, onChange}: Props) {
             <div className="field">
                 <label>Status</label>
                 <select
-                value={filters.status}
-                onChange={(e) => onChange({ status: e.target.value as any })}
+                    value={filters.status}
+                    onChange={(e) => onChange({ status: e.target.value as any })}
                 >
                 {statuses.map((s) => (
                     <option key={s} value={s}>
@@ -59,12 +59,15 @@ export function FiltersInput({filters, onChange}: Props) {
             <div className="field">
                 <label>Até</label>
                 <input
-                type="date"
-                value={filters.dateTo}
-                onChange={(e) => onChange({ dateTo: e.target.value })}
+                    type="date"
+                    value={filters.dateTo}
+                    onChange={(e) => onChange({ dateTo: e.target.value })}
                 />
             </div>
-            <button className="btn" onClick={() => onChange({ query: "", priority: "ALL", location: "ALL", status: "ALL", dateFrom: "", dateTo: "" })}>
+            <button 
+                className="btn" 
+                onClick={() => onChange({ query: "", priority: "ALL", location: "ALL", status: "ALL", dateFrom: "", dateTo: "" })}
+            >
                 Limpar
             </button>
         </div>

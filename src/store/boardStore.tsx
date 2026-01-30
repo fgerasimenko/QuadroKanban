@@ -3,6 +3,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { Task } from "../types/taskTypes";
 import { defaultFilters } from "../domain/taskFilters";
 import type { TaskFilters } from "../domain/taskFilters";
+import { moveCardToStatus } from "@/domain/boardMutation";
 
 type User = {
   id: string;
@@ -15,6 +16,8 @@ type CreateTaskInput = {
   priority: Task["priority"];
   deadline: Date;
   shortDescription?: string;
+  location?: string;
+  isExternal?: boolean;
   assignedTo?: Task["assignedTo"];
 };
 
@@ -35,6 +38,7 @@ type BoardStore = {
   updateTask: (id: string, patch: Partial<Task>) => void;
   archiveTask: (id: string) => void;
   unarchiveTask: (id: string) => void;
+  moveTask: (taskId: string, nextStatus: Task["status"]) => void;
 };
 
 type BoardProviderProps = {
@@ -44,13 +48,6 @@ type BoardProviderProps = {
 };
 
 const BoardStoreContext = createContext<BoardStore | null>(null);
-
-const createId = () => {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-};
 
 const sortByOrder = (a: Task, b: Task) => a.order - b.order;
 
@@ -70,11 +67,13 @@ export function BoardProvider({ initialTasks, currentUser, children }: BoardProv
       const activeTodo = prev
         .filter((t) => t.status === "TODO" && !t.archived)
         .sort(sortByOrder);
-      const nextOrder = activeTodo.length ? activeTodo[activeTodo.length - 1].order + 1 : 0;
+      const nextOrder = activeTodo.length ? activeTodo[activeTodo.length - 1].order + 1 : 0; // Ordenação
 
       const next: Task = {
-        id: createId(),
+        id: crypto.randomUUID(),
         title: input.title,
+        location: input.location,
+        isExternal: input.isExternal ?? false,
         longDescription: input.longDescription,
         shortDescription: input.shortDescription,
         priority: input.priority,
@@ -130,6 +129,10 @@ export function BoardProvider({ initialTasks, currentUser, children }: BoardProv
     });
   };
 
+  const moveTask = (taskId, nextStatus) => {
+    setTasks(prev => moveCardToStatus(prev, taskId, nextStatus, currentUser.id));
+  };
+
   const value = useMemo(
     () => ({
       tasks,
@@ -148,6 +151,7 @@ export function BoardProvider({ initialTasks, currentUser, children }: BoardProv
       updateTask,
       archiveTask,
       unarchiveTask,
+      moveTask
     }),
     [
       tasks,

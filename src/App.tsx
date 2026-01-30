@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { mockTasks } from "./data/mock";
 import { Board } from "./components/Board";
 import { FiltersInput } from "./components/FiltersInput";
-import { TaskModal } from "./components/TaskModal";
+import { TaskFormModal } from "./components/TaskFormModal";
 import { useBoard } from "./hooks/useBoard";
 import { BoardProvider } from "./store/boardStore";
+import { ActionButton } from "./components/ActionButton";
 
 type CurrentUser = {
   id: string;
@@ -11,6 +13,7 @@ type CurrentUser = {
 };
 
 function AppContent({ currentUser }: { currentUser: CurrentUser }) {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const {
     filters,
     patchFilters,
@@ -30,11 +33,12 @@ function AppContent({ currentUser }: { currentUser: CurrentUser }) {
         </div>
       </header>
 
-      <div>
-        
+      <FiltersInput filters={filters} onChange={patchFilters} />
+
+      <div className="board-actions">
+        <ActionButton title="Criar Tarefa" onAction={() => setIsCreateOpen(true)} />
       </div>
 
-      <FiltersInput filters={filters} onChange={patchFilters} />
       <Board
         columns={columns}
         onCardClick={openCard}
@@ -42,15 +46,19 @@ function AppContent({ currentUser }: { currentUser: CurrentUser }) {
         onDragEnd={onDragEnd}
       />
 
-      {selectedTask && (
-        <TaskModal task={selectedTask} onClose={closeModal} />
-      )}
+      {isCreateOpen ? (
+        <TaskFormModal mode="create" onClose={() => setIsCreateOpen(false)} />
+      ) : null}
+
+      {selectedTask ? (
+        <TaskFormModal mode="edit" task={selectedTask} onClose={closeModal} />
+      ) : null}
     </div>
   );
 }
 
 export default function App() {
-  const currentUser = { id: "1", name: "Fabio" };
+  const currentUser = { id: "1", name: "Usuário" };
 
   return (
     <BoardProvider initialTasks={mockTasks} currentUser={currentUser}>

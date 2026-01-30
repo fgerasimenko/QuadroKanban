@@ -30,6 +30,7 @@ export function filterTasks(tasks: Task[], filters: TaskFilters): Task[] {
     if (q) {
       const blob = [
         t.title,
+        t.location,
         t.longDescription,
         t.priority,
         t.status,
@@ -37,6 +38,8 @@ export function filterTasks(tasks: Task[], filters: TaskFilters): Task[] {
 
       if (!includesText(blob, q)) { return false; }
     }
+    
+    if (filters.location !== "ALL" && t.location !== filters.location) { return false; }
 
     if (filters.priority !== "ALL" && t.priority !== filters.priority) { return false; }
 

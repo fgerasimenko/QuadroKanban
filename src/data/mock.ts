@@ -14,7 +14,7 @@ export const mockTasks: Task[] = [
         archivedAt: undefined,
         assignedTo: {
             id: "1",
-            name: "Fabio"
+            name: "Usuário"
         },
         archived: false
     },
@@ -31,7 +31,7 @@ export const mockTasks: Task[] = [
         archivedAt: undefined,
         assignedTo: {
             id: "1",
-            name: "Fabio"
+            name: "Usuário"
         },
         archived: false
     },
@@ -48,7 +48,7 @@ export const mockTasks: Task[] = [
         archivedAt: undefined,
         assignedTo: {
             id: "1",
-            name: "Fabio"
+            name: "Usuário"
         },
         archived: false
     }

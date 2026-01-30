@@ -24,6 +24,11 @@ header {
   min-height: 55vh;
 }
 
+.board-actions {
+  display: flex;
+  justify-content: center;
+}
+
 .col {
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.10);
@@ -106,12 +111,17 @@ label {
   font-size: 14px
 }
 
-input, select {
+input, select, textarea {
   padding: 10px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0);
   background: rgb(255, 255, 255);
   color: #000000;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 .modal-overlay {
@@ -157,11 +167,24 @@ input, select {
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  gap: 12px;
 }
 
 .modal-footer {
   padding: 15px 15px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.form-error {
+  color: #b91c1c;
+  font-size: 13px;
 }
 
 .btn, .btn-custom {

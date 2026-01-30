@@ -1,7 +1,15 @@
 import { useMemo } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { Task } from "../types/taskTypes";
-import { filterTasks } from "../domain/taskFilters";
+import {
+    selectActiveTasks,
+    selectArchivedTasks,
+    selectColumns,
+    selectSelectedTask,
+    selectTasksForUser,
+    selectVisibleTasks,
+    sortByOrder,
+} from "../domain/boardSelectors";
 import { useBoardStore } from "../store/boardStore";
 
 export function useBoard() {
@@ -21,39 +29,33 @@ export function useBoard() {
         updateTask,
         archiveTask,
         unarchiveTask,
+        moveTask,
     } = useBoardStore();
 
     const tasksForUser = useMemo(() => {
-        return tasks.filter((t: Task) => t.assignedTo?.id === currentUser.id);
+        return selectTasksForUser(tasks, currentUser.id);
     }, [tasks, currentUser.id]);
 
     const activeTasks = useMemo(() => {
-        return tasksForUser.filter((t) => !t.archived);
+        return selectActiveTasks(tasksForUser);
     }, [tasksForUser]);
 
     const archivedTasks = useMemo(() => {
-        return tasksForUser.filter((t) => t.archived);
+        return selectArchivedTasks(tasksForUser);
     }, [tasksForUser]);
 
     const visibleTasks = useMemo(() => {
-        return filterTasks(activeTasks, filters);
+        return selectVisibleTasks(activeTasks, filters);
     }, [activeTasks, filters]);
 
     const visibleArchivedTasks = useMemo(() => {
-        return filterTasks(archivedTasks, filters);
+        return selectVisibleTasks(archivedTasks, filters);
     }, [archivedTasks, filters]);
 
-    const sortByOrder = (a: Task, b: Task) => a.order - b.order;
-
-    const columns = useMemo(() => ({
-        TODO: visibleTasks.filter(t => t.status === "TODO").sort(sortByOrder),
-        DOING: visibleTasks.filter(t => t.status === "DOING").sort(sortByOrder),
-        DONE: visibleTasks.filter(t => t.status === "DONE").sort(sortByOrder),
-    }), [visibleTasks]);
+    const columns = useMemo(() => selectColumns(visibleTasks), [visibleTasks]);
 
     const selectedTask = useMemo(() => {
-        if (!selectedTaskId) { return null; }
-        return tasksForUser.find((t) => t.id === selectedTaskId) ?? null;
+        return selectSelectedTask(tasksForUser, selectedTaskId);
     }, [selectedTaskId, tasksForUser]);
 
     function openCard(taskId: string) {
@@ -66,22 +68,7 @@ export function useBoard() {
     }
 
     function moveCard(taskId: string, nextStatus: Task["status"]) {
-        setTasks((prev) => {
-            const task = prev.find((t) => t.id === taskId);
-            if (!task || task.archived || task.assignedTo?.id !== currentUser.id) { return prev; }
-
-            const destTasks = prev
-                .filter((t) => t.status === nextStatus && !t.archived && t.id !== taskId)
-                .sort(sortByOrder);
-
-            const nextOrder = destTasks.length
-                ? destTasks[destTasks.length - 1].order + 1
-                : 0;
-
-            return prev.map((t) =>
-                t.id === taskId ? { ...t, status: nextStatus, order: nextOrder } : t
-            );
-        });
+        moveTask(taskId, nextStatus);
     }
 
     function onDragEnd(result: DropResult) {
@@ -115,9 +102,9 @@ export function useBoard() {
         };
 
         setTasks((prev) => {
-            const tasksForUser = prev.filter((t) => t.assignedTo?.id === currentUser.id);
-            const activeTasks = tasksForUser.filter((t) => !t.archived);
-            const visible = filterTasks(activeTasks, filters);
+            const tasksForUser = selectTasksForUser(prev, currentUser.id);
+            const activeTasks = selectActiveTasks(tasksForUser);
+            const visible = selectVisibleTasks(activeTasks, filters);
             const visibleIds = new Set(visible.map((t) => t.id));
 
             const getColumnFull = (status: Task["status"]) =>
@@ -128,7 +115,7 @@ export function useBoard() {
             if (sourceId === destId) {
                 const full = getColumnFull(sourceId);
                 const visibleList = full.filter((t) => visibleIds.has(t.id));
-                const reorderedVisible = arrayMove(
+                const reorderedVisible = arrayMove<Task>(
                     visibleList,
                     source.index,
                     destination.index
