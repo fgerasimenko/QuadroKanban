@@ -1,0 +1,18 @@
+{
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "exclude": ["node_modules", "build", "dist"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"],
+      "~/*": ["./*"]
+    }
+  }
+}
